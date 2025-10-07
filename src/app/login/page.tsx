@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
-const PROD_URL = 'https://vr-crm-six.vercel.app/'
+const PROD_URL = 'https://vr-crm-six.vercel.app/'; // hardcode your deployed URL for now
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
