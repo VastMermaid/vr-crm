@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <main className="p-6">
       <h1 className="text-2xl font-semibold">VR CRM</h1>
-      <p className="opacity-70">You’re signed in. Tiles/search come next.</p>
+      <p className="opacity-70">You’re signed in. Tiles/search next.</p>
     </main>
   )
 }
