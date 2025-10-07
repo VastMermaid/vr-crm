@@ -5,6 +5,3 @@ export default function Page() {
     </main>
   );
 }
-
-// Tell TypeScript this file is definitely a module
-export {};
