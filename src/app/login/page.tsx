@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 
+const PROD_URL = 'https://vr-crm-six.vercel.app/'
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -13,11 +15,11 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
 
+    console.log('Email redirect =', PROD_URL) // sanity
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-      },
+      options: { emailRedirectTo: PROD_URL },
     })
 
     setLoading(false)
@@ -26,39 +28,27 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6">
-      <div className="max-w-sm w-full bg-white/10 p-6 rounded-xl shadow">
-        <h1 className="text-2xl font-semibold text-center mb-4">Sign in</h1>
+    <main className="min-h-screen flex items-center justify-center p-6">
+      <form onSubmit={handleLogin} className="w-full max-w-sm space-y-4">
+        <h1 className="text-2xl font-semibold text-center">Sign in</h1>
 
-        {sent ? (
-          <p className="text-center text-green-500">
-            Check your email for the magic link ✉️
-          </p>
-        ) : (
-          <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-200 text-black"
-              type="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        {/* show the redirect value so we can eyeball it */}
+        <p className="text-xs text-center opacity-60">redirect to: {PROD_URL}</p>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-            >
-              {loading ? 'Sending…' : 'Send Magic Link'}
-            </button>
-          </form>
-        )}
-
-        {error && (
-          <p className="text-center text-red-500 mt-3">{error}</p>
-        )}
-      </div>
+        <input
+          className="w-full rounded-lg border px-3 py-2 text-black"
+          type="email"
+          placeholder="you@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <button className="w-full rounded-lg border px-4 py-2" disabled={loading}>
+          {loading ? 'Sending…' : 'Send Magic Link'}
+        </button>
+        {sent && <p className="text-center text-green-600">Check your email ✉️</p>}
+        {error && <p className="text-center text-red-600">{error}</p>}
+      </form>
     </main>
   )
 }
