@@ -11,7 +11,7 @@ export default function AuthCallback() {
   useEffect(() => {
     const run = async () => {
       try {
-        // Flow A: token_hash + type=magiclink (your current email template)
+        // Flow A: token_hash + type=magiclink (email template path)
         const token_hash = params.get('token_hash')
         const type = params.get('type')
         if (token_hash && type) {
@@ -20,7 +20,7 @@ export default function AuthCallback() {
             type: type as 'magiclink' | 'recovery' | 'email_change',
           })
           if (error) throw error
-          router.replace('/') // go to Home
+          router.replace('/')
           return
         }
 
@@ -33,7 +33,7 @@ export default function AuthCallback() {
           return
         }
 
-        // Flow C: #access_token=... (hash fragment)
+        // Flow C: hash fragment (#access_token=...) – older flows
         if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
           const { error } = await supabase.auth.getSessionFromUrl({ storeSession: true })
           if (error) throw error
@@ -42,16 +42,20 @@ export default function AuthCallback() {
         }
 
         setErr('No auth parameters found.')
-      } catch (e: any) {
-        setErr(e?.message ?? 'Auth failed')
+      } catch (e: unknown) {
+        const message =
+          e instanceof Error ? e.message : typeof e === 'string' ? e : 'Auth failed'
+        setErr(message)
       }
     }
-    run()
+    void run()
   }, [params, router])
 
   return (
     <main className="min-h-screen grid place-items-center p-6">
-      <p>Signing you in… {err && <span className="text-red-600">({err})</span>}</p>
+      <p>
+        Signing you in… {err && <span className="text-red-600">({err})</span>}
+      </p>
     </main>
   )
 }
