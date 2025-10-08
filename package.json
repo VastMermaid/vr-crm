@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "vercel --prod",
+    "deploy:force": "vercel --prod --force"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.74.0",
